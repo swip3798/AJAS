@@ -16,7 +16,6 @@ class Api():
         self.app.add_url_rule('/<path:path>', "get", self.get_callback, methods=["GET"])
         self.app.add_url_rule('/<path:path>', "post", self.post_callback, methods=["POST"])
         self.blocks = []
-
     
     def add_block(self, block):
         self.blocks.append(block)
@@ -45,8 +44,8 @@ class Api():
         path = "/" + path
         for i in self.blocks:
             if i.prefix == path[:len(i.prefix)]:
-                return self.serializer.serialize(i.resolver_get(path[len(i.prefix):], request.headers, query))
-        return self.serializer.serialize(self.resolvers_get[path](request.headers, query))
+                return self.serializer.serialize(i.resolver_get(path[len(i.prefix):], request.headers.environ, query))
+        return self.serializer.serialize(self.resolvers_get[path](request.headers.environ, query))
     
     def post_callback(self, path):
         '''
@@ -57,8 +56,8 @@ class Api():
         path = "/" + path
         for i in self.blocks:
             if i.prefix == path[:len(i.prefix)]:
-                return self.serializer.serialize(i.resolver_post(path[len(i.prefix):], request.headers, query))
-        return self.serializer.serialize(self.resolvers_post[path](request.headers, query))
+                return self.serializer.serialize(i.resolver_post(path[len(i.prefix):], request.headers.environ, query))
+        return self.serializer.serialize(self.resolvers_post[path](request.headers.environ, query))
 
     def run(self, host, port, ssl_context = None):
         '''
