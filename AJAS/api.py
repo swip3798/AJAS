@@ -24,17 +24,15 @@ class Api():
 
     def add_get_resolver(self, path, resolver):
         '''
-        Add a new resolver to the main Api for GET Requests
         path: String => URL-path
-        resolver: function => resolver function with the signature res(header, query)
+        resolver: Function => resolver function with the signature res(header, query)
         '''
         self.resolvers_get[path] = resolver
     
     def add_post_resolver(self, path, resolver):
         '''
-        Add a new resolver to the main Api for POST Requests
         path: String => URL-path
-        resolver: function => resolver function with the signature res(header, query)
+        resolver: Function => resolver function with the signature res(header, query)
         '''
         self.resolvers_post[path] = resolver
 
