@@ -54,4 +54,5 @@ if __name__ == "__main__":
     threading._start_new_thread(set_up_server, ())
     time.sleep(1)
     unittest.main()
+    threading._shutdown()
     exit()
