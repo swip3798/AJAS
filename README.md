@@ -1,5 +1,7 @@
 # AJAS
-[![Build Status](https://travis-ci.org/swip3798/AJAS.svg?branch=master)](https://travis-ci.org/swip3798/AJAS)  
+[![Build Status](https://travis-ci.org/swip3798/AJAS.svg?branch=master)](https://travis-ci.org/swip3798/AJAS)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Generic badge](https://img.shields.io/badge/Python%20Version-3.x-green.svg)]()
 ## Description  
 Another JSON Api Server. This is a library for Python 3 to create fast JSON-Rest APIs.
 ## Usage
