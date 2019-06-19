@@ -4,6 +4,11 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("reqirements.txt") as f:
+    requirements = f.readlines()
+    print(requirements)
+
+
 setup(name='AJAS',
       version='0.2',
       description='Lightweight REST Sever framework, based on bottle',
@@ -20,5 +25,5 @@ setup(name='AJAS',
           "Operating System :: OS Independent",
           "Development Status :: 3 - Alpha"
       ],
-      install_requires=['bottle==0.12.16']
+      install_requires=requirements
 )

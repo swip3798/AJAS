@@ -1,6 +1,6 @@
-import bottle
 from .serializer import Serializer
 from flask import Flask, request
+from gevent.pywsgi import WSGIServer
 
 class Api():
     '''
@@ -60,11 +60,15 @@ class Api():
                 return self.serializer.serialize(i.resolver_post(path[len(i.prefix):], request.headers, query))
         return self.serializer.serialize(self.resolvers_post[path](request.headers, query))
 
-    def run(self, host, port):
+    def run(self, host, port, ssl_context = None):
         '''
         Runs the webserver which hosts the Api.
-        host: String => IP-Adress which the server listens to, use "0.0.0.0" for all
+        host: String => IP-Adress which the server listens to, if you want the server to listen to all IPs just give an empty string
         port: int => Port on which the server listens
-        server: String => Server system which AJAS should use, look up on the bottle framework for the server options https://bottlepy.org/docs/dev/deployment.html#server-options
         '''
-        self.app.run(host = host, port = port)
+        self.app.logger.debug("Server is starting...")
+        if ssl_context == None:
+            http_server = WSGIServer((host, port), self.app)
+        else:
+            http_server = WSGIServer((host, port), self.app, keyfile=ssl_context[1], certfile=ssl_context[0])
+        http_server.serve_forever()
