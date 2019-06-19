@@ -1,13 +1,12 @@
-class Block():
+from AJAS import Api
+
+class Block(Api):
 
     def __init__(self, prefix, authenticator = None):
+        super().__init__()
         self.prefix = prefix
-        self.authenticator = None
-        self.resolvers_get = {}
-        self.resolvers_post = {}
-    
-    def add_get_resolver(self, path, resolver):
-        self.resolvers_get[path] = resolver
-    
-    def add_post_resolver(self, path, resolver):
-        self.resolvers_post[path] = resolver
+        self.authenticator = authenticator
+        self.app = None
+        self.blocks = None
+        self.run = None
+        self.add_block = None

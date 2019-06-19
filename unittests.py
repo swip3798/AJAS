@@ -1,5 +1,5 @@
 import unittest
-from AJAS import Api, Serializer
+from AJAS import Api, Serializer, Block
 
 class Unitests_Api(unittest.TestCase):
     def test_init(self):
@@ -22,6 +22,13 @@ class Unitests_Api(unittest.TestCase):
     def test_callback_get(self):
         self.api.add_get_resolver("/testpath", lambda x, y: {"test": 1})
         jsonstr = self.api.get_callback("/testpath")
+        self.assertEqual(jsonstr, '{"test": 1}', "JSON string is wrong")
+
+    def test_blocks_get(self):
+        v1 = Block("/v1")
+        v1.add_get_resolver("/testpath", lambda x, y: {"test": 1})
+        self.api.add_block(v1)
+        jsonstr = self.api.get_callback("/v1/testpath")
         self.assertEqual(jsonstr, '{"test": 1}', "JSON string is wrong")
     
     def setUp(self):

@@ -11,6 +11,11 @@ class Api():
         self.app = Bottle()
         self.app.route('<path:path>', method="GET", callback=self.get_callback)
         self.app.route('<path:path>', method="POST", callback=self.post_callback)
+        self.blocks = []
+
+    
+    def add_block(self, block):
+        self.blocks.append(block)
 
 
     def add_get_resolver(self, path, resolver):
@@ -20,10 +25,22 @@ class Api():
         self.resolvers_post[path] = resolver
 
     def get_callback(self, path):
-        return self.serializer.serialize(self.resolvers_get[path](request.headers, request.query))
+        query = request.query.dict
+        for i in query:
+            query[i] = query[i][0]
+        for i in self.blocks:
+            if i.prefix == path[:len(i.prefix)]:
+                return self.serializer.serialize(i.resolvers_get[path[len(i.prefix):]](request.headers, query))
+        return self.serializer.serialize(self.resolvers_get[path](request.headers, query))
     
     def post_callback(self, path):
-        return self.serializer.serialize(self.resolvers_post[path](request.headers, request.forms))
+        query = request.forms.dict
+        for i in query:
+            query[i] = query[i][0]
+        for i in self.blocks:
+            if i.prefix == path[:len(i.prefix)]:
+                return self.serializer.serialize(i.resolvers_post[path[len(i.prefix):]](request.headers, query))
+        return self.serializer.serialize(self.resolvers_post[path](request.headers, query))
 
     def run(self, host, port, server='wsgiref'):
         self.app.run(host = host, port = port, server = server)
