@@ -4,12 +4,12 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setup(name='LunaDB',
+setup(name='AJAS',
       version='0.5.2',
       description='Lightweight REST Sever framework, based on bottle',
       author='Christian Schweigel',
       author_email='',
-      url='https://github.com/swip3798/LunaDB',
+      url='https://github.com/swip3798/AJAS',
       packages=['AJAS'],
       long_description = long_description,
       long_description_content_type="text/markdown",
