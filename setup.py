@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='AJAS',
-      version='0.1',
+      version='0.2',
       description='Lightweight REST Sever framework, based on bottle',
       author='Christian Schweigel',
       author_email='',

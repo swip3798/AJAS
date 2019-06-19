@@ -1,6 +1,6 @@
 import bottle
-from bottle import request, route, Bottle
 from .serializer import Serializer
+from flask import Flask, request
 
 class Api():
     '''
@@ -12,9 +12,9 @@ class Api():
         self.resolvers_get = {}
         self.resolvers_post = {}
         self.serializer = Serializer()
-        self.app = Bottle()
-        self.app.route('<path:path>', method="GET", callback=self.get_callback)
-        self.app.route('<path:path>', method="POST", callback=self.post_callback)
+        self.app = Flask(__name__)
+        self.app.add_url_rule('/<path:path>', "get", self.get_callback, methods=["GET"])
+        self.app.add_url_rule('/<path:path>', "post", self.post_callback, methods=["POST"])
         self.blocks = []
 
     
@@ -41,9 +41,8 @@ class Api():
         Internal method
         Calls the specific resolver for the paths and serializes the return value
         '''
-        query = request.query.dict
-        for i in query:
-            query[i] = query[i][0]
+        query = request.args
+        path = "/" + path
         for i in self.blocks:
             if i.prefix == path[:len(i.prefix)]:
                 return self.serializer.serialize(i.resolver_get(path[len(i.prefix):], request.headers, query))
@@ -54,19 +53,18 @@ class Api():
         Internal method
         Calls the specific resolver for the paths and serializes the return value
         '''
-        query = request.forms.dict
-        for i in query:
-            query[i] = query[i][0]
+        query = request.form
+        path = "/" + path
         for i in self.blocks:
             if i.prefix == path[:len(i.prefix)]:
                 return self.serializer.serialize(i.resolver_post(path[len(i.prefix):], request.headers, query))
         return self.serializer.serialize(self.resolvers_post[path](request.headers, query))
 
-    def run(self, host, port, server='wsgiref'):
+    def run(self, host, port):
         '''
         Runs the webserver which hosts the Api.
         host: String => IP-Adress which the server listens to, use "0.0.0.0" for all
         port: int => Port on which the server listens
         server: String => Server system which AJAS should use, look up on the bottle framework for the server options https://bottlepy.org/docs/dev/deployment.html#server-options
         '''
-        self.app.run(host = host, port = port, server = server)
+        self.app.run(host = host, port = port)
