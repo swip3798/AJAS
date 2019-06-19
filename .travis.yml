@@ -9,3 +9,4 @@ install:
 script:
   - python unittests.py
   - python setup.py build
+  - python setup.py sdist bdist_wheel
