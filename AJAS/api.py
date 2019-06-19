@@ -30,7 +30,7 @@ class Api():
             query[i] = query[i][0]
         for i in self.blocks:
             if i.prefix == path[:len(i.prefix)]:
-                return self.serializer.serialize(i.resolvers_get[path[len(i.prefix):]](request.headers, query))
+                return self.serializer.serialize(i.resolver_get(path[len(i.prefix):], request.headers, query))
         return self.serializer.serialize(self.resolvers_get[path](request.headers, query))
     
     def post_callback(self, path):
@@ -39,7 +39,7 @@ class Api():
             query[i] = query[i][0]
         for i in self.blocks:
             if i.prefix == path[:len(i.prefix)]:
-                return self.serializer.serialize(i.resolvers_post[path[len(i.prefix):]](request.headers, query))
+                return self.serializer.serialize(i.resolver_post(path[len(i.prefix):], request.headers, query))
         return self.serializer.serialize(self.resolvers_post[path](request.headers, query))
 
     def run(self, host, port, server='wsgiref'):

@@ -1,5 +1,5 @@
 import unittest
-from AJAS import Api, Serializer, Block
+from AJAS import Api, Serializer, Block, Authenticator, AuthException
 
 class Unitests_Api(unittest.TestCase):
     def test_init(self):
@@ -30,6 +30,29 @@ class Unitests_Api(unittest.TestCase):
         self.api.add_block(v1)
         jsonstr = self.api.get_callback("/v1/testpath")
         self.assertEqual(jsonstr, '{"test": 1}', "JSON string is wrong")
+    
+    def test_auth_positive(self):
+        auth = Authenticator()
+        v1 = Block("/v1", auth)
+        v1.add_get_resolver("/testpath", lambda x, y: {"test": 1})
+        self.api.add_block(v1)
+        jsonstr = self.api.get_callback("/v1/testpath")
+        self.assertEqual(jsonstr, '{"test": 1}', "JSON string is wrong")
+
+    def test_auth_negative(self):
+        class Negative_Auth(Authenticator):
+            def authenticate(self, path, headers, query):
+                    return not super().authenticate(path, headers, query)
+        auth = Negative_Auth()
+        v1 = Block("/v1", auth)
+        v1.add_get_resolver("/testpath", lambda x, y: {"test": 1})
+        self.api.add_block(v1)
+        exception_raised = False
+        try:
+            jsonstr = self.api.get_callback("/v1/testpath")
+        except AuthException:
+            exception_raised = True
+        self.assertEqual(exception_raised, True, "No exception was raised")
     
     def setUp(self):
         self.api = Api()

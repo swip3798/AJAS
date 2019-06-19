@@ -1,4 +1,5 @@
-from AJAS import Api
+from .api import Api
+from .exceptions import AuthException
 
 class Block(Api):
 
@@ -10,3 +11,21 @@ class Block(Api):
         self.blocks = None
         self.run = None
         self.add_block = None
+
+    def resolver_get(self, path, headers, query):
+        if self.authenticator is not None:
+            if self.authenticator.authenticate(path, headers, query):
+                return self.resolvers_get[path](headers, query)
+            else:
+                raise AuthException("Path " + path + " requires authentication")
+        else:
+            return self.resolvers_get[path](headers, query)
+
+    def resolver_post(self, path, headers, query):
+        if self.authenticator is not None:
+            if self.authenticator.authenticate(path, headers, query):
+                return self.resolvers_post[path](headers, query)
+            else:
+                raise AuthException("Path " + path + " requires authentication")
+        else:
+            return self.resolvers_post[path](headers, query)
