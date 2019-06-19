@@ -6,5 +6,6 @@ def resolver(header, query):
 api = Api()
 v1 = Block("/v1")
 v1.add_get_resolver("/hello", resolver)
+v1.add_post_resolver("/hello", resolver)
 api.add_block(v1)
-api.run("0.0.0.0", 8080, server="tornado")
+api.run("0.0.0.0", 8080)
